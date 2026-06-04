@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Activity App | Find Your Next Fun Thing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: #f0f4f8;
+            color: #2d3748;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+        }
+
+        h1 {
+            color: #4a5568;
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        /* Main Sections */
+        .app-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            padding: 1.8rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .card h2 {
+            color: #2b6cb0;
+            margin-bottom: 1.2rem;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            margin: 0.5rem;
+        }
+
+        .btn-random {
+            background-color: #38a169;
+            color: white;
+            font-weight: bold;
+        }
+
+        .btn-random:hover {
+            background-color: #2f855a;
+        }
+
+        .btn-category {
+            background-color: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-category:hover {
+            background-color: #cbd5e0;
+        }
+
+        /* Activity Display */
+        .activity-display {
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2d3748;
+            text-align: center;
+            padding: 1rem;
+            border: 2px dashed #cbd5e0;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        /* Activity Grid (Manual Selection) */
+        .activity-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.8rem;
+            margin-top: 1rem;
+            max-height: 300px;
+            overflow-y: auto;
+            padding-right: 0.5rem;
+        }
+
+        .activity-item {
+            background: #f7fafc;
+            padding: 0.7rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+        }
+
+        .activity-item:hover {
+            background: #bee3f8;
+        }
+
+        /* Smart Recommendations */
+        .recommendation-form {
+            margin: 1rem 0;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        select {
+            width: 100%;
+            padding: 0.8rem;
+            border-radius: 8px;
+            border: 1px solid #cbd5e0;
+            font-size: 1rem;
+        }
+
+        .btn-recommend {
+            background-color: #805ad5;
+            color: white;
+            width: 100%;
+        }
+
+        .btn-recommend:hover {
+            background-color:6b46c1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .app-grid {
+                grid-template-columns: 1fr;
+            }
+            .activity-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎯 Activity App</h1>
+            <p class="subtitle">Find fun, random, or personalized activities in one click!</p>
+        </header>
+
+        <!-- Random Activity Generator -->
+        <div class="app-grid">
+            <div class="card">
+                <h2>🎲 Random Activity Generator</h2>
+                <p>Click below for a surprise activity!</p>
+                <button class="btn btn-random" onclick="generateRandomActivity()">Generate Random Activity</button>
+                <div id="randomActivity" class="activity-display">Your random activity will appear here</div>
+            </div>
+
+            <!-- Smart Recommendations -->
+            <div class="card">
+                <h2>🧠 Smart Recommendations</h2>
+                <div class="recommendation-form">
+                    <div class="form-group">
+                        <label>Your Mood:</label>
+                        <select id="mood">
+                            <option value="happy">Happy & Energetic</option>
+                            <option value="chill">Chill & Relaxed</option>
+                            <option value="creative">Creative & Inspired</option>
+                            <option value="social">Social & Outgoing</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Energy Level:</label>
+                        <select id="energy">
+                            <option value="high">High (Active)</option>
+                            <option value="medium">Medium (Balanced)</option>
+                            <option value="low">Low (Low Effort)</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-recommend" onclick="getSmartRecommendation()">Get My Recommendation</button>
+                <div id="recommendedActivity" class="activity-display">Your personalized activity will appear here</div>
+            </div>
+        </div>
+
+        <!-- Choose Activity Manually -->
+        <div class="card">
+            <h2>📋 Choose Any Activity</h2>
+            <div>
+                <button class="btn btn-category" onclick="filterActivities('all')">All</button>
+                <button class="btn btn-category" onclick="filterActivities('outdoor')">Outdoor</button>
+                <button class="btn btn-category" onclick="filterActivities('indoor')">Indoor</button>
+                <button class="btn btn-category" onclick="filterActivities('creative')">Creative</button>
+                <button class="btn btn-category" onclick="filterActivities('relax')">Relax</button>
+            </div>
+            <div id="activityList" class="activity-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        // Complete Activity Database (Categorized)
+        const activities = {
+            outdoor: ["Hike a trail", "Ride a bike", "Go for a walk", "Play frisbee", "Visit a park", "Go camping", "Have a picnic"],
+            indoor: ["Watch a movie", "Cook a meal", "Play board games", "Do a puzzle", "Read a book", "Clean your space", "Listen to music"],
+            creative: ["Draw a picture", "Write a story", "Do origami", "Paint", "Learn a song", "Make a craft", "Photograph things"],
+            relax: ["Meditate", "Take a bath", "Nap", "Stretch", "Sip tea", "Daydream", "Do yoga"],
+            all: []
+        };
+
+        // Combine all activities for "All" category
+        activities.all = [
+            ...activities.outdoor,
+            ...activities.indoor,
+            ...activities.creative,
+            ...activities.relax
+        ];
+
+        // Load ALL activities on page load
+        window.onload = function() {
+            filterActivities('all');
+        };
+
+        // 1. One-Click Random Activity Generator
+        function generateRandomActivity() {
+            const randomIndex = Math.floor(Math.random() * activities.all.length);
+            const randomAct = activities.all[randomIndex];
+            document.getElementById("randomActivity").textContent = `✅ ${randomAct}`;
+        }
+
+        // 2. Manual Activity Selection (Filter by Category)
+        function filterActivities(category) {
+            const list = document.getElementById("activityList");
+            list.innerHTML = "";
+
+            activities[category].forEach(act => {
+                const item = document.createElement("div");
+                item.className = "activity-item";
+                item.textContent = act;
+                // Click to select activity
+                item.onclick = () => {
+                    alert(`You chose: ${act}`);
+                };
+                list.appendChild(item);
+            });
+        }
+
+        // 3. Smart Activity Recommendations (Mood + Energy)
+        function getSmartRecommendation() {
+            const mood = document.getElementById("mood").value;
+            const energy = document.getElementById("energy").value;
+            let recommended = "";
+
+            // Smart logic based on mood & energy
+            if (mood === "happy" && energy === "high") {
+                recommended = pickRandom(activities.outdoor);
+            } else if (mood === "chill" && energy === "low") {
+                recommended = pickRandom(activities.relax);
+            } else if (mood === "creative" && energy === "medium") {
+                recommended = pickRandom(activities.creative);
+            } else if (mood === "social" && energy === "high") {
+                recommended = "Hang out with friends / Play a group game";
+            } else if (energy === "low") {
+                recommended = pickRandom([...activities.relax, ...activities.indoor]);
+            } else {
+                recommended = pickRandom(activities.all);
+            }
+
+            document.getElementById("recommendedActivity").textContent = `✨ ${recommended}`;
+        }
+
+        // Helper: Pick random item from array
+        function pickRandom(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+    </script>
+</body>
+</html>
